@@ -1,0 +1,21 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.card {
+  font-family: sans-serif;
+  text-align: center;
+  display: grid;
+  grid-template-columns: 400px 400px 400px;
+  grid-gap: 10px;
+  background-color: #fff;
+  color: #444;
+}
+
+.article {
+  background-color: #444;
+  color: #fff;
+  border-radius: 5px;
+  padding: 20px;
+  height: 250px;
+}
