@@ -76,11 +76,7 @@ const IndexPage = () => {
     selectedEnv: "all",
   })
 
-  const { status, data, error, isFetching } = useArticles(filters)
-
-  if (!isFetching) {
-    console.log(data)
-  }
+  const { data, error, isFetching } = useArticles(filters)
 
   // function to call when clicking on any of the button
   function onSelectEnv(event) {
@@ -92,58 +88,60 @@ const IndexPage = () => {
     })
   }
 
-  if (!isFetching && !error) {
-    return (
-      <Layout>
-        <SearchInput setFilters={setFilters} filters={filters} />
-        {/** languages checkboxes */}
-        <div className="flex items-center m-4">
-          {languages.map((language, index) => {
-            return (
-              <Checkbox
-                key={index}
-                language={language}
-                selectedLangs={filters.selectedLangs}
-                filters={filters}
-                setFilters={setFilters}
-                value={languages[index]}
-              />
-            )
-          })}
-        </div>
-
-        {/** buttons */}
-        <div className="space-x-2 m-4">
-          {environments.map((env, index) => {
-            return (
-              <input
-                key={index}
-                type="button"
-                value={env}
-                className="rounded bg-blue-600 px-2 text-white"
-                onClick={onSelectEnv}
-              />
-            )
-          })}
-        </div>
-
-        {/** artcile cards based on the articlesState */}
-        <div className="card m-4">
-          {data.map(article => {
-            return (
-              <Article
-                key={article.id}
-                article={article}
-                onSelectEnv={onSelectEnv}
-              />
-            )
-          })}
-        </div>
-      </Layout>
-    )
+  if (isFetching) {
+    return <div>loading...</div>
   }
 
-  return <div>something is wrong...</div>
+  if (error) return <div>Something is wrong</div>
+
+  return (
+    <Layout>
+      <SearchInput setFilters={setFilters} filters={filters} />
+      {/** languages checkboxes */}
+      <div className="flex items-center m-4">
+        {languages.map((language, index) => {
+          return (
+            <Checkbox
+              key={index}
+              language={language}
+              selectedLangs={filters.selectedLangs}
+              filters={filters}
+              setFilters={setFilters}
+              value={languages[index]}
+            />
+          )
+        })}
+      </div>
+
+      {/** buttons */}
+      <div className="space-x-2 m-4">
+        {environments.map((env, index) => {
+          return (
+            <input
+              key={index}
+              type="button"
+              value={env}
+              className="rounded bg-blue-600 px-2 text-white"
+              onClick={onSelectEnv}
+            />
+          )
+        })}
+      </div>
+
+      {/** artcile cards based on the articlesState */}
+      <div className="card m-4">
+        {data.map(article => {
+          return (
+            <Article
+              key={article.id}
+              article={article}
+              onSelectEnv={onSelectEnv}
+            />
+          )
+        })}
+      </div>
+    </Layout>
+  )
 }
 
 export default IndexPage

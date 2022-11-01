@@ -2,7 +2,7 @@ import React from "react"
 
 export default function Article({ article, onSelectEnv }) {
   // fields coming from the "Article" type from strapi
-  const { id, title, description, languages, environment } = article.attributes
+  const { title, description, environment } = article.attributes
   return (
     <div className="article">
       <div>{title}</div>
