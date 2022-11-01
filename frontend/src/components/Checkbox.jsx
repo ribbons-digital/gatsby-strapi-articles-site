@@ -1,12 +1,11 @@
 import React from "react"
+import { FilterContext } from "../context/filterContext"
 
-export default function Checkbox({
-  language,
-  selectedLangs,
-  filters,
-  setFilters,
-  value,
-}) {
+export default function Checkbox({ language, value }) {
+  const { filters, setFilters } = React.useContext(FilterContext)
+
+  const { selectedLangs } = filters
+
   // function to call when checkboxes are ticked/unticked
   function onSelectLanguages(event) {
     console.log(event.target.value)

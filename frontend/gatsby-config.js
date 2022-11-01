@@ -32,27 +32,27 @@ module.exports = {
         icon: `src/images/gatsby-icon.png`, // This path is relative to the root of the site.
       },
     },
-    {
-      resolve: "gatsby-source-strapi",
-      options: {
-        apiURL: process.env.STRAPI_API_URL || "http://localhost:1337",
-        accessToken: process.env.STRAPI_TOKEN,
-        collectionTypes: [
-          {
-            singularName: "article",
-            queryParams: {
-              publicationState:
-                process.env.GATSBY_IS_PREVIEW === "true" ? "preview" : "live",
-              populate: {
-                cover: "*",
-                blocks: {
-                  populate: "*",
-                },
-              },
-            },
-          },
-        ],
-      },
-    },
+    // {
+    //   resolve: "gatsby-source-strapi",
+    //   options: {
+    //     apiURL: process.env.STRAPI_API_URL || "http://localhost:1337",
+    //     accessToken: process.env.STRAPI_TOKEN,
+    //     collectionTypes: [
+    //       {
+    //         singularName: "article",
+    //         queryParams: {
+    //           publicationState:
+    //             process.env.GATSBY_IS_PREVIEW === "true" ? "preview" : "live",
+    //           populate: {
+    //             cover: "*",
+    //             blocks: {
+    //               populate: "*",
+    //             },
+    //           },
+    //         },
+    //       },
+    //     ],
+    //   },
+    // },
   ],
 }

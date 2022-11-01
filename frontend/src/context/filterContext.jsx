@@ -1,11 +1,15 @@
 import React from "react"
 
-export const FilterContext = React.createContext(null)
+export const FilterContext = React.createContext({
+  selectedLangs: [],
+  selectedEnv: "all",
+  searchText: "",
+})
 
 export default function FilterContextProvider({ children }) {
   const [filters, setFilters] = React.useState({
     selectedLangs: [],
-    selectedEnv: "",
+    selectedEnv: "all",
     searchText: "",
   })
 
