@@ -8,14 +8,14 @@ import Checkbox from "../components/Checkbox"
 import Layout from "../components/layout"
 import SearchInput from "../components/searchInput"
 
-import { environments, languages } from "../utils"
+import { environments, industries, languages, verticals } from "../utils"
 
 const endpoint = "http://localhost:1337/graphql"
 
 function useArticles(filters) {
   return useQuery(
     ["articles"],
-    async filters => {
+    async () => {
       const {
         articles: { data },
       } = await request(
@@ -28,8 +28,8 @@ function useArticles(filters) {
                 attributes {
                   title
                   description
-                  languages
-                  environment
+                  industry
+                  vertical
                 }
               }
             }
@@ -40,28 +40,49 @@ function useArticles(filters) {
     },
     {
       select: articles => {
-        const filteredArticles = articles.filter(article => {
-          const re = new RegExp(filters.searchText, "i")
-          if (filters.selectedLangs.length > 0) {
+        const re = new RegExp(filters.searchText, "i")
+        let filteredArticles
+        if (
+          filters.selectedIndustry !== "all" ||
+          filters.selectedVertical !== "all"
+        ) {
+          filteredArticles = articles.filter(article => {
             return (
-              article.attributes.languages.some(lang =>
-                filters.selectedLangs.includes(lang)
-              ) &&
+              (article.attributes.industry?.replace(/_/g, "") ===
+                filters.selectedIndustry.replace(/ /g, "") ||
+                article.attributes.vertical?.replace(/_/g, "") ===
+                  filters.selectedVertical.replace(/[\s-]+/g, "")) &&
               re.test(article.attributes.title + article.attributes.description)
             )
-          }
 
-          if (filters.selectedEnv !== "all") {
-            return (
-              article.attributes.environment === filters.selectedEnv &&
-              re.test(article.attributes.title + article.attributes.description)
+            // if (filters.selectedIndustry !== "all") {
+            //   console.log("industry")
+            //   return (
+            //     article.attributes.industry?.replace(/_/g, "") ===
+            //       filters.selectedIndustry.replace(/ /g, "") &&
+            //     re.test(article.attributes.title + article.attributes.description)
+            //   )
+            // }
+            //
+            // if (filters.selectedVertical !== "all") {
+            //   return (
+            //     article.attributes.vertical?.replace(/_/g, "") ===
+            //       filters.selectedVertical.replace(/ /g, "") &&
+            //     re.test(article.attributes.title + article.attributes.description)
+            //   )
+            // }
+            //
+            // return re.test(
+            //   article.attributes.title + article.attributes.description
+            // )
+          })
+        } else {
+          filteredArticles = articles.filter(article => {
+            return re.test(
+              article.attributes.title + article.attributes.description
             )
-          }
-
-          return re.test(
-            article.attributes.title + article.attributes.description
-          )
-        })
+          })
+        }
 
         return filteredArticles
       },
@@ -72,8 +93,8 @@ function useArticles(filters) {
 const IndexPage = () => {
   const [filters, setFilters] = React.useState({
     searchText: "",
-    selectedLangs: [],
-    selectedEnv: "all",
+    selectedIndustry: "all",
+    selectedVertical: "all",
   })
 
   const { data, error, isFetching } = useArticles(filters)
@@ -99,15 +120,27 @@ const IndexPage = () => {
       <SearchInput setFilters={setFilters} filters={filters} />
       {/** languages checkboxes */}
       <div className="flex items-center m-4">
-        {languages.map((language, index) => {
+        {industries.map((industry, index) => {
           return (
             <Checkbox
               key={index}
-              language={language}
-              selectedLangs={filters.selectedLangs}
               filters={filters}
               setFilters={setFilters}
-              value={languages[index]}
+              selectedOption="selectedIndustry"
+              value={industry}
+            />
+          )
+        })}
+      </div>
+      <div className="flex items-center m-4">
+        {verticals.map((vertical, index) => {
+          return (
+            <Checkbox
+              key={index}
+              filters={filters}
+              setFilters={setFilters}
+              selectedOption="selectedVertical"
+              value={vertical}
             />
           )
         })}

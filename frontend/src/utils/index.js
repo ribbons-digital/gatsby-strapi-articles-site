@@ -77,3 +77,25 @@ export const languages = [
 
 // environments array (used to generate the buttons)
 export const environments = ["all", "chromeos", "android"]
+
+export const industries = [
+  "all",
+  "marketing",
+  "technology",
+  "finance",
+  "fashion",
+  "entertainment",
+  "drones and robotics",
+]
+
+export const verticals = [
+  "all",
+  "contact center",
+  "financial services",
+  "government",
+  "healthcare",
+  "manufacturing",
+  "retail",
+  "non-profit",
+  "professional services",
+]

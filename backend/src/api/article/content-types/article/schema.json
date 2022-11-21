@@ -37,9 +37,28 @@
       "type": "string",
       "required": true
     },
-    "languages": {
-      "type": "json",
-      "required": true
+    "industry": {
+      "type": "enumeration",
+      "enum": [
+        "marketing",
+        "technology",
+        "finance",
+        "advertising",
+        "drones and robotics"
+      ]
+    },
+    "vertical": {
+      "type": "enumeration",
+      "enum": [
+        "contact center",
+        "financial services",
+        "government",
+        "healthcare",
+        "manufacturing",
+        "non-profit",
+        "professional services",
+        "retail"
+      ]
     }
   }
 }
