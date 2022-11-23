@@ -30,6 +30,7 @@ function useArticles(filters) {
                   description
                   industry
                   vertical
+                  updatedAt
                 }
               }
             }
@@ -66,7 +67,13 @@ function useArticles(filters) {
           )
         })
 
-        return filteredArticles
+        return filters.sortBy === "oldest"
+          ? filteredArticles
+          : filters.sortBy === "latest"
+          ? filteredArticles.sort((a, b) =>
+              a.attributes.updatedAt > b.attributes.updatedAt ? -1 : 1
+            )
+          : filteredArticles
       },
     }
   )
@@ -77,6 +84,7 @@ const IndexPage = () => {
     searchText: "",
     selectedIndustry: "all",
     selectedVertical: "all",
+    sortBy: "oldest",
   })
 
   const { data, error, isFetching } = useArticles(filters)
@@ -91,14 +99,31 @@ const IndexPage = () => {
     })
   }
 
+  function onSortByDate(event) {
+    setFilters({
+      ...filters,
+      sortBy: event.target.value,
+    })
+  }
+
   if (isFetching) {
     return <div>loading...</div>
   }
 
   if (error) return <div>Something is wrong</div>
 
+  console.log(filters.sortBy)
+
   return (
     <Layout>
+      <div className="flex flex-col m-4">
+        <label for="sort-by-date">Sort by date:</label>
+        <select id="sort-by-date" name="sort-by-date" onChange={onSortByDate}>
+          <option value="oldest">Sort by: oldest</option>
+          <option value="latest">Sort by: latest</option>
+        </select>
+      </div>
+
       <SearchInput setFilters={setFilters} filters={filters} />
       {/** languages checkboxes */}
       <div className="flex items-center m-4">
