@@ -98,4 +98,5 @@ export const verticals = [
   "retail",
   "non-profit",
   "professional services",
+  "remote/hybrid work",
 ]

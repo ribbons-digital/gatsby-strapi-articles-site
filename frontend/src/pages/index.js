@@ -41,48 +41,30 @@ function useArticles(filters) {
     {
       select: articles => {
         const re = new RegExp(filters.searchText, "i")
-        let filteredArticles
-        if (
-          filters.selectedIndustry !== "all" ||
-          filters.selectedVertical !== "all"
-        ) {
-          filteredArticles = articles.filter(article => {
-            return (
-              (article.attributes.industry?.replace(/_/g, "") ===
-                filters.selectedIndustry.replace(/ /g, "") ||
-                article.attributes.vertical?.replace(/_/g, "") ===
-                  filters.selectedVertical.replace(/[\s-]+/g, "")) &&
-              re.test(article.attributes.title + article.attributes.description)
-            )
+        let filteredArticles = articles
 
-            // if (filters.selectedIndustry !== "all") {
-            //   console.log("industry")
-            //   return (
-            //     article.attributes.industry?.replace(/_/g, "") ===
-            //       filters.selectedIndustry.replace(/ /g, "") &&
-            //     re.test(article.attributes.title + article.attributes.description)
-            //   )
-            // }
-            //
-            // if (filters.selectedVertical !== "all") {
-            //   return (
-            //     article.attributes.vertical?.replace(/_/g, "") ===
-            //       filters.selectedVertical.replace(/ /g, "") &&
-            //     re.test(article.attributes.title + article.attributes.description)
-            //   )
-            // }
-            //
-            // return re.test(
-            //   article.attributes.title + article.attributes.description
-            // )
-          })
-        } else {
-          filteredArticles = articles.filter(article => {
-            return re.test(
-              article.attributes.title + article.attributes.description
-            )
-          })
+        if (filters.selectedIndustry !== "all") {
+          filteredArticles = filteredArticles.filter(
+            article =>
+              article.attributes.industry?.replace(/_/g, "") ===
+                filters.selectedIndustry.replace(/[\s-/]+/g, "") &&
+              re.test(article.attributes.title + article.attributes.description)
+          )
         }
+        if (filters.selectedVertical !== "all") {
+          filteredArticles = filteredArticles.filter(
+            article =>
+              article.attributes.vertical?.replace(/_/g, "") ===
+                filters.selectedVertical.replace(/[\s-/]+/g, "") &&
+              re.test(article.attributes.title + article.attributes.description)
+          )
+        }
+
+        filteredArticles = filteredArticles.filter(article => {
+          return re.test(
+            article.attributes.title + article.attributes.description
+          )
+        })
 
         return filteredArticles
       },
