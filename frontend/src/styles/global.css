@@ -19,3 +19,39 @@
   padding: 20px;
   height: 250px;
 }
+
+.checkbox__container {
+  margin-top: 16px;
+}
+
+input[type="radio"] {
+  /* Add if not using autoprefixer */
+  -webkit-appearance: none;
+  appearance: none;
+  /* For iOS < 15 to remove gradient background */
+  background-color: #fff;
+  /* Not removed via appearance */
+  margin: 0;
+  font: inherit;
+  color: #000;
+  width: 18px;
+  height: 18px;
+  border: 1.5px solid #3c4043;
+  border-radius: 10%;
+  display: grid;
+  place-content: center;
+  margin-top: 4px;
+  margin-right: 4px;
+}
+
+input[type="radio"]::before {
+  content: url("../img/input-icons/checkbox-selected.svg");
+  border-radius: 10%;
+  transform: scale(0);
+  transition: 120ms transform ease-in-out;
+  margin-top: 6px;
+}
+
+input[type="radio"]:checked::before {
+  transform: scale(1);
+}

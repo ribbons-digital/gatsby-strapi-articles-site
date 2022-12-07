@@ -78,6 +78,39 @@ export const languages = [
 // environments array (used to generate the buttons)
 export const environments = ["all", "chromeos", "android"]
 
+export const radioButtonGroups = [
+  {
+    name: "Industry",
+    options: [
+      "all",
+      "marketing",
+      "technology",
+      "finance",
+      "healthcare",
+      "fashion",
+      "entertainment",
+      "drones and robotics",
+    ],
+    isAccordionExpanded: true,
+  },
+  {
+    name: "Vertical",
+    options: [
+      "all",
+      "contact center",
+      "financial services",
+      "government",
+      "healthcare",
+      "manufacturing",
+      "retail",
+      "non-profit",
+      "professional services",
+      "remote/hybrid work",
+    ],
+    isAccordionExpanded: false,
+  },
+]
+
 export const industries = [
   "all",
   "marketing",

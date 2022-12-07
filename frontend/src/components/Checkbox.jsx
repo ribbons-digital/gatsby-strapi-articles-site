@@ -5,6 +5,7 @@ export default function Checkbox({
   setFilters,
   selectedOption,
   value,
+  isMobile,
 }) {
   // function to call when checkboxes are ticked/unticked
   function onSelecetedOption(event) {
@@ -15,15 +16,32 @@ export default function Checkbox({
   }
   return (
     <div className="mr-3 space-x-1">
-      <input
-        type="radio"
-        id={selectedOption}
-        name={selectedOption}
-        value={value}
-        onChange={onSelecetedOption}
-        checked={filters[selectedOption] === value}
-      />
-      <label htmlFor={value}>{value}</label>
+      <label
+        htmlFor={
+          isMobile
+            ? `${selectedOption}-${value}-mobile`
+            : `${selectedOption}-${value}`
+        }
+      >
+        <input
+          type="radio"
+          id={
+            isMobile
+              ? `${selectedOption}-${value}-mobile`
+              : `${selectedOption}-${value}`
+          }
+          name={
+            isMobile
+              ? `${selectedOption}-{value}-mobile`
+              : `${selectedOption}-${value}`
+          }
+          value={value}
+          onChange={onSelecetedOption}
+          checked={filters[selectedOption] === value}
+        />
+
+        {value}
+      </label>
     </div>
   )
 }

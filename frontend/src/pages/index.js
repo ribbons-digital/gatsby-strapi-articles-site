@@ -4,13 +4,20 @@ import * as React from "react"
 import { gql, request } from "graphql-request"
 
 import Article from "../components/ArticleCard"
-import Checkbox from "../components/Checkbox"
 import Layout from "../components/layout"
 import SearchInput from "../components/searchInput"
-
-import { environments, industries, languages, verticals } from "../utils"
-
+import jwt_decode from "jwt-decode"
+import { environments } from "../utils"
+import RadioButtonGroups from "../components/RadioButtonGroups"
+import { GoogleLogin, googleLogout } from "@react-oauth/google"
+import useLoadGsiScript from "../hooks/useLoadGsiScript"
+import { useGoogleOauth } from "../context/GoogleOAuthContext"
+import GoogleLoginButton from "../components/GoogleLoginButton"
 const endpoint = "http://localhost:1337/graphql"
+
+const GOOGLE_CLIENT_ID =
+  "986056637442-j8mq8su17adre0pkjhso6njmo60rqm8j.apps.googleusercontent.com"
+const GOOGLE_CLIENT_SECRET = "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"
 
 function useArticles(filters) {
   return useQuery(
@@ -68,7 +75,9 @@ function useArticles(filters) {
         })
 
         return filters.sortBy === "oldest"
-          ? filteredArticles
+          ? filteredArticles.sort((a, b) =>
+              a.attributes.updatedAt > b.attributes.updatedAt ? 1 : -1
+            )
           : filters.sortBy === "latest"
           ? filteredArticles.sort((a, b) =>
               a.attributes.updatedAt > b.attributes.updatedAt ? -1 : 1
@@ -80,15 +89,16 @@ function useArticles(filters) {
 }
 
 const IndexPage = () => {
+  const [user, setUser] = React.useState(null)
   const [filters, setFilters] = React.useState({
     searchText: "",
     selectedIndustry: "all",
     selectedVertical: "all",
     sortBy: "oldest",
   })
-
   const { data, error, isFetching } = useArticles(filters)
 
+  console.log({ filters })
   // function to call when clicking on any of the button
   function onSelectEnv(event) {
     console.log("button --> " + event.target.value)
@@ -106,53 +116,44 @@ const IndexPage = () => {
     })
   }
 
+  function handleSignout() {
+    setUser(null)
+    window.google?.accounts.id.disableAutoSelect()
+  }
   if (isFetching) {
     return <div>loading...</div>
   }
 
   if (error) return <div>Something is wrong</div>
 
-  console.log(filters.sortBy)
-
-  return (
+  return user ? (
     <Layout>
+      <button
+        className="rounded bg-red-600 m-2 p-2 text-white"
+        onClick={handleSignout}
+      >
+        Sign out
+      </button>
       <div className="flex flex-col m-4">
-        <label for="sort-by-date">Sort by date:</label>
+        <label htmlFor="sort-by-date">Sort by date:</label>
         <select id="sort-by-date" name="sort-by-date" onChange={onSortByDate}>
           <option value="oldest">Sort by: oldest</option>
           <option value="latest">Sort by: latest</option>
         </select>
       </div>
-
-      <SearchInput setFilters={setFilters} filters={filters} />
-      {/** languages checkboxes */}
-      <div className="flex items-center m-4">
-        {industries.map((industry, index) => {
-          return (
-            <Checkbox
-              key={index}
-              filters={filters}
-              setFilters={setFilters}
-              selectedOption="selectedIndustry"
-              value={industry}
-            />
-          )
-        })}
+      <div className="flex flex-col w-1/3">
+        <SearchInput setFilters={setFilters} filters={filters} />
+        <button className="rounded bg-blue-600 mx-2 px-2 text-white">
+          Toggle all
+        </button>
       </div>
-      <div className="flex items-center m-4">
-        {verticals.map((vertical, index) => {
-          return (
-            <Checkbox
-              key={index}
-              filters={filters}
-              setFilters={setFilters}
-              selectedOption="selectedVertical"
-              value={vertical}
-            />
-          )
-        })}
-      </div>
+      <RadioButtonGroups filters={filters} setFilters={setFilters} />
 
+      <RadioButtonGroups
+        isMobile={true}
+        filters={filters}
+        setFilters={setFilters}
+      />
       {/** buttons */}
       <div className="space-x-2 m-4">
         {environments.map((env, index) => {
@@ -181,7 +182,15 @@ const IndexPage = () => {
         })}
       </div>
     </Layout>
+  ) : (
+    <GoogleLoginButton user={user} setUser={setUser} />
   )
 }
 
 export default IndexPage
+
+// export function Head() {
+//   return (
+//     <script src="https://accounts.google.com/gsi/client" async defer></script>
+//   )
+// }
