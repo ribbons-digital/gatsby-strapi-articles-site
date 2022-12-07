@@ -1,8 +1,6 @@
 import React from "react"
 import jwt_decode from "jwt-decode"
 import { useGoogleOauth } from "../context/GoogleOAuthContext"
-const GOOGLE_CLIENT_ID =
-  "986056637442-j8mq8su17adre0pkjhso6njmo60rqm8j.apps.googleusercontent.com"
 export default function GoogleLoginButton({ user, setUser }) {
   const authBtn = React.useRef(null)
 
@@ -16,7 +14,7 @@ export default function GoogleLoginButton({ user, setUser }) {
   React.useEffect(() => {
     console.log("hello")
     window.google?.accounts.id.initialize({
-      client_id: GOOGLE_CLIENT_ID,
+      client_id: process.env.GOOGLE_CLIENT_ID,
       callback: handleCallbackResponse,
     })
 

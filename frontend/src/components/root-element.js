@@ -9,8 +9,6 @@ const queryClient = new QueryClient({
   },
 })
 
-const GOOGLE_CLIENT_ID =
-  "986056637442-j8mq8su17adre0pkjhso6njmo60rqm8j.apps.googleusercontent.com"
 const RootElement = ({ children }) => {
   // function handleCallbackResponse(response) {}
   //

@@ -15,10 +15,6 @@ import { useGoogleOauth } from "../context/GoogleOAuthContext"
 import GoogleLoginButton from "../components/GoogleLoginButton"
 const endpoint = "http://localhost:1337/graphql"
 
-const GOOGLE_CLIENT_ID =
-  "986056637442-j8mq8su17adre0pkjhso6njmo60rqm8j.apps.googleusercontent.com"
-const GOOGLE_CLIENT_SECRET = "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"
-
 function useArticles(filters) {
   return useQuery(
     ["articles"],
